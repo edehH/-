@@ -1,0 +1,6 @@
+{
+  "appId": "com.alameed.app",
+  "appName": "الْعَمِيدُ",
+  "webDir": "dist",
+  "bundledWebRuntime": false
+}
