@@ -1,0 +1,5 @@
+{
+  "name": "الـعـمـيـد (AL-AMEED)",
+  "description": "نظام إدارة الاشتراكات والوسطاء المتقدم - لوحة تحكم تنفيذية خاصة",
+  "requestFramePermissions": ["geolocation"]
+}
