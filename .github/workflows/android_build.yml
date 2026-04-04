@@ -1,0 +1,73 @@
+name: Build AL-AMEED APK
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. جلب الكود من المستودع
+      - uses: actions/checkout@v4
+      
+      # 2. إعداد بيئة Node.js (النسخة المستقرة 22)
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 3. إعداد Java (JDK 21) اللازمة لبناء الأندرويد
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'zulu'
+
+      # 4. تثبيت المكتبات اللازمة للمشروع ولنظام أندرويد
+      - name: Install Dependencies
+        run: |
+          rm -f package-lock.json
+          npm install --platform=linux --arch=x64
+          # تثبيت أدوات Capacitor للتعامل مع ملفات أندرويد
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          # تثبيت الإضافات المطلوبة (مثل التخزين والمشاركة)
+          npm install @capacitor/filesystem @capacitor/share
+          npm install @capacitor/assets --save-dev
+
+      # 5. بناء نسخة الويب (Vite)
+      - name: Build Web Project (Vite)
+        run: npm run build
+
+      # 6. تهيئة منصة أندرويد داخل المشروع
+      - name: Initialize Android Platform
+        run: |
+          # التأكد من وجود ملف capacitor.config.json باسم التطبيق الصحيح
+          npx cap add android
+
+      # 7. توليد الأيقونات وصور التشغيل (Splash Screens)
+      - name: Setup and Generate Icons
+        run: |
+          mkdir -p assets
+          # التأكد من وجود أيقونة باسم icon.png في المجلد الرئيسي
+          cp icon.png assets/logo.png 2>/dev/null || :
+          cp icon.png assets/icon.png 2>/dev/null || :
+          npx @capacitor/assets generate --android
+
+      # 8. مزامنة ملفات الويب مع مجلد أندرويد
+      - name: Sync Android
+        run: npx cap sync android
+
+      # 9. بناء ملف APK النهائي باستخدام Gradle
+      - name: Build APK with Gradle
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      # 10. رفع ملف APK الناتج لتحميله من GitHub
+      - name: Upload AL-AMEED APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AL-AMEED-OFFICIAL-APK
+          path: android/app/build/outputs/apk/debug/*.apk
