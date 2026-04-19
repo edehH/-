@@ -437,11 +437,11 @@ export default function App() {
                 
                 <nav className="flex flex-col gap-4">
                   {[
-                    { id: 'home', label: 'الرئيسية', icon: LayoutDashboard, color: 'text-brand-blue' },
-                    { id: 'dues', label: 'المستحقات القريبة', icon: CreditCard, color: 'text-brand-yellow' },
-                    { id: 'fleet', label: 'أسطول التجار', icon: Store, color: 'text-brand-blue' },
-                    { id: 'brokers', label: 'شبكة الوسطاء', icon: Briefcase, color: 'text-brand-emerald' },
-                    { id: 'expired', label: 'الاشتراكات الخاملة', icon: Clock, color: 'text-brand-crimson' },
+                    { id: 'home', label: 'الرئيسية', icon: LayoutDashboard, color: 'text-brand-blue', bgColor: '#c0cfe3' },
+                    { id: 'dues', label: 'المستحقات القريبة', icon: CreditCard, color: 'text-brand-yellow', bgColor: '#9d2cc8' },
+                    { id: 'fleet', label: 'أسطول التجار', icon: Store, color: 'text-brand-blue', bgColor: '#34ba52' },
+                    { id: 'brokers', label: 'شبكة الوسطاء', icon: Briefcase, color: 'text-brand-emerald', bgColor: '#6ddcbe' },
+                    { id: 'expired', label: 'الاشتراكات الخاملة', icon: Clock, color: 'text-brand-crimson', bgColor: '#8ea947' },
                   ].map((item) => (
                     <motion.button
                       key={item.id}
@@ -457,11 +457,12 @@ export default function App() {
                         }
                         setIsMenuOpen(false);
                       }}
+                      style={{ backgroundColor: item.bgColor }}
                       className={cn(
                         "flex items-center gap-6 p-5 rounded-3xl transition-all duration-300 border border-transparent",
                         (activeTab === item.id || activeListView === item.id) 
-                          ? "bg-brand-blue/5 border-brand-blue/10 shadow-sm" 
-                          : "hover:bg-black/5"
+                          ? "opacity-100 border-black/10 shadow-sm" 
+                          : "opacity-80 hover:opacity-100"
                       )}
                     >
                       <item.icon className={cn("w-7 h-7", item.color)} />
@@ -475,7 +476,11 @@ export default function App() {
                     <Plus size={24} />
                     <span>إضافة تاجر جديد</span>
                   </button>
-                  <button onClick={() => { setShowAddBroker(true); setIsMenuOpen(false); }} className="w-full apple-button bg-white/5 text-white border border-white/10 flex items-center justify-center gap-3">
+                  <button 
+                    onClick={() => { setShowAddBroker(true); setIsMenuOpen(false); }} 
+                    style={{ backgroundColor: '#b12929' }}
+                    className="w-full apple-button text-white border-transparent flex items-center justify-center gap-3"
+                  >
                     <UserPlus size={24} />
                     <span>إضافة وسيط جديد</span>
                   </button>
